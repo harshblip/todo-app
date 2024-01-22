@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://harsh:lolololol@todo-cluster.xpljwfs.mongodb.net/runtest?retryWrites=true&w=majority');
+const dotenv = require('dotenv')
+dotenv.config();
+mongoose.connect(process.env.DB_CONNECT);
 
 const todoTaskSchema = new mongoose.Schema({
     content: {
