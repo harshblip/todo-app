@@ -4,7 +4,7 @@
   "description": "a full-stack to-do app",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "live": "nodemon index.js"
   },
   "author": "harsh",
   "license": "ISC",

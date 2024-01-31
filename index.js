@@ -28,12 +28,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 
-// GET
-app.get('/', (req, res) => {
-    res.render('todo.ejs');
-})
+// GET METHOD
+async function getTasks() {
+    const tasks = await TodoTask.find({});
+    return tasks;
+}
 
-// POST
+app.get("/", async function (req, res) {
+    const tasks = await getTasks();
+    res.render('todo.ejs', { todoTasks: tasks });
+});
+
+// POST METHOD
 app.post('/', async (req, res) => {
     const todoTask = new TodoTask({
         content: req.body.content
@@ -45,4 +51,33 @@ app.post('/', async (req, res) => {
         res.status(500).send(err);
     }
     console.log(req.body);
+});
+
+// UPDATE METHOD
+app.route('/edit/:id')
+    .get(async (req, res) => {
+        const id = req.params.id;
+        const tasks = await TodoTask.find({});
+        res.render('todoEdit.ejs', { todoTasks: tasks, idTask: id });
+    })
+    .post(async (req, res) => {
+        const id = req.params.id;
+        try {
+            await TodoTask.findByIdAndUpdate(id, { content: req.body.content });
+            res.redirect("/");
+        } catch (err) {
+            res.status(500).send(err);
+        }
+    });
+
+
+// DELETE METHOD
+app.route('/delete/:id').get(async (req, res) => {
+    const id = req.params.id;
+    try {
+        await TodoTask.findByIdAndDelete(id);
+        res.redirect('/');
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
